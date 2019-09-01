@@ -1,0 +1,94 @@
+body
+    overflow-x: hidden
+    margin: 0
+    padding: 0
+    background-color: #fff
+    color: white
+    line-height: 1.75
+    font: arial, sens-serif
+    .site-header
+        min-height: 655px
+        height: 100vh
+        background-color: #E4E2E7
+        .top-line
+            padding-top: 40px
+            width: 100%
+            z-index: 1
+            display: flex
+            justify-content: space-between
+            flex-direction: row
+            nav
+                font-family: 'Lato', sans-serif
+                font-size: 44px
+                display: block
+                position: absolute
+                top: 16px
+                right: 45px
+                // padding-right: 45px
+                ul
+                    list-style: none
+                    float: right
+                    margin: 0
+                    li
+                        float: left
+                        padding: 15px    
+                        a
+                            text-decoration: none
+                            color: #99d9ea
+                    li:hover
+                        cursor: pointer
+                        border-bottom: 1px solid #ED1C24
+                        transition: .25s
+                        a
+                            color: #00A2E8
+                            
+    
+.h1
+    line-height: 1.4
+
+.logo
+    img
+        width: 50px
+        margin-left: 45px
+
+header 
+    position:relative
+    background-size: cover
+    background-position: center
+
+.header-flex
+    display: flex
+    height: 85%
+    position: relative
+    top: 0
+    color: white
+.flex-center
+    margin: auto
+
+.header-composition
+    text-align: center
+    position: relative
+    background-color: rgba(153,217,234, 0.2)
+    padding: 30px
+    p
+        margin-top: 40px
+        // white-space: nowrap
+.header-composition:hover
+    cursor: default
+.welcome
+    p.hithere
+        font-size: 24px
+        display: flex
+        align-items: center
+        white-space: nowrap
+        margin: 0
+        span
+            margin: 0 10px
+        &::before, &::after
+            content: ''
+            height: 1px
+            width: 100%
+            position: relative
+            background-color: #FFF
+
+
