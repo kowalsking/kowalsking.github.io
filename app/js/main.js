@@ -15,4 +15,4 @@ const consoleStyle = [
     });
   }
 
-  logotype()
+  logotype();
