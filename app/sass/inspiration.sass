@@ -1,7 +1,7 @@
 .container
   background-color: #eee
   height: 100%
-
+  border-left: lightblue 5px solid
 .logo
   position: fixed
   top: 50px
@@ -29,26 +29,35 @@
     text-align: center
     text-transform: uppercase
 
+
+.smile
+  img
+    width: 365px
+    height: 550px
+
+.art
+  img
+    width: 365px
+    height: 550px
+
 .kw-capsule__content
   position: relative
   width: 100%
   text-align: center
-  img
-    width: 350px
-    height: 550px
-  .kw-capsule__smile2
-    position: relative
-    top: 100px
-    left: -100px
-  .kw-capsule__smile3
-    position: relative
-    top: 200px
-    left: -200px
-    z-index: 2
-  .kw-capsule__smile4
-    position: absolute
-    right: 0
-    z-index: 1
+
+.kw-capsule__smile2
+  position: relative
+  top: 100px
+  left: -100px
+.kw-capsule__smile3
+  position: relative
+  top: 200px
+  left: -200px
+  z-index: 2
+.kw-capsule__smile4
+  position: absolute
+  right: 0
+  z-index: 1
 
 .kw-capsule__q
   display: block
@@ -71,4 +80,15 @@
   position: relative
   left: 50px
 
-
+.music
+  .kw-capsule__content
+    height: 80vh
+    width: 100%
+    position: relative
+    background-image: url(../inspiration/img/1.jpg)
+    iframe
+      position: absolute
+      top: 50%
+      left: 50%
+      margin-left: -40%
+      margin-top: -250px
