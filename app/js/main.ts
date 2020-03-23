@@ -9,7 +9,7 @@ const consoleStyle = [
 ].join(';');
 console.log('%cHi there!', consoleStyle);
 
-function hello(compiler: string) {
+function hello(compiler: string): void {
     console.log(`Hello from ${compiler}`);
 }
 // hello('TypeScript');
