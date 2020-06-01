@@ -75,3 +75,7 @@ body {
 .error {
   border: 2px solid red;
 }
+
+.config_header {
+  font-weight: 700;
+}
