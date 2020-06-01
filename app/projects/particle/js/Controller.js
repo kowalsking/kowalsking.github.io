@@ -223,7 +223,11 @@ class Controller {
 
     bigwin.addEventListener("change", (e) => {
       this.animationConfig.name = e.target.value;
-      spineTextarea.value = JSON.stringify(this.animationConfig, undefined, 4);
+      fields.spineTextarea.value = JSON.stringify(
+        this.animationConfig,
+        undefined,
+        4
+      );
       this.setupSpine(null, this.loader.resources);
       this.setupParticle();
     });
