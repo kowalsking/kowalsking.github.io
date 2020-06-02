@@ -64,7 +64,7 @@ class Controller {
     Object.keys(bigwinList).forEach((bw) => {
       this.loader.add(`${bw}`, bigwinList[bw].path);
     });
-    this.loader.add(`img`, urls[0]);
+    this.loader.add(`coin`, urls[0]);
 
     // urls.forEach((url, idx) => {
     //   loader.add(`img${idx}`, url);
@@ -74,6 +74,7 @@ class Controller {
   onAssetsLoaded(_, res) {
     this.setupSpine(_, res);
     this.setupParticle();
+    fields.loader.style.display = "none";
 
     this.update();
   }
@@ -206,19 +207,31 @@ class Controller {
       if (!this.emitter) return;
       this.emitter.emit = true;
       this.emitter.resetPositionTracking();
-      this.emitter.updateOwnerPos(e.data.global.x, e.data.global.y);
+      console.log(e.data.global.x, e.data.global.y);
+      console.log(this.app.renderer.plugins.interaction.mouse.global);
+      const x = this.app.renderer.plugins.interaction.mouse.global.x;
+      const y = this.app.renderer.plugins.interaction.mouse.global.y;
+      this.emitter.updateOwnerPos(x, y);
     });
 
     fields.openSidebar.addEventListener("click", (e) => {
       this.app.renderer.resize(this.width - 500, (this.width - 500) / coeff);
-      this.bigwinContainer.scale.x = (this.width - 500) / this.width;
-      this.bigwinContainer.scale.y = (this.width - 500) / coeff / this.height;
+      this.stage.pivot(0.5);
+      // this.bigwinContainer.scale.x = (this.width - 500) / this.width;
+      // this.bigwinContainer.scale.y = (this.width - 500) / coeff / this.height;
+
+      this.stage.scale.x = (this.width - 500) / this.width;
+      this.stage.scale.y = (this.width - 500) / coeff / this.height;
     });
 
     fields.closeSidebar.addEventListener("click", (e) => {
       this.app.renderer.resize(this.width, this.height);
-      this.bigwinContainer.scale.x = 1;
-      this.bigwinContainer.scale.y = 1;
+      // this.stage.scale.x = 1;
+      // this.stage.scale.y = 1;
+    });
+
+    window.addEventListener("click", (e) => {
+      console.log(e);
     });
 
     bigwin.addEventListener("change", (e) => {
@@ -245,13 +258,19 @@ class Controller {
       const file = e.target.files[0];
       const reader = new FileReader();
       const url = URL.createObjectURL(file);
-      this.imagePaths.spritesheet = url;
+      console.dir(file);
+
+      const loader = PIXI.loader;
 
       reader.addEventListener("load", (e) => {
         try {
+          console.log(reader.result);
           const json = JSON.parse(reader.result);
-          this.loader.add(`img${Math.random()}`, url);
-          this.upgradeTextures(json);
+          loader.add(`imgJSON${Math.random()}`, url);
+          loader.load((_, res) => {
+            console.log(res);
+          });
+          this.upgradeTextures(json, file.name);
         } catch (e) {
           console.log(e);
         }
@@ -273,7 +292,7 @@ class Controller {
     }
   }
 
-  upgradeTextures(json) {
+  upgradeTextures(json, name) {
     this.imagePaths.art[0].textures = Object.keys(json.frames);
     this.imagePaths.art[1].textures = Object.keys(json.frames).reverse();
     console.log(this.imagePaths);
