@@ -111,3 +111,30 @@ body {
     transform: rotate(360deg);
   }
 }
+
+h5 {
+  display: inline;
+}
+
+.bigwinDuration {
+  width: 60px;
+}
+
+.particleControls table {
+  min-width: 144px;
+  text-align: center;
+}
+.particleControls input {
+  width: 45px;
+}
+
+.alphaPopup,
+.scalePopup,
+.speedPopup {
+  display: none;
+}
+
+summary {
+  outline: none;
+  cursor: pointer;
+}
