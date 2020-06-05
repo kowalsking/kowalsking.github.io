@@ -73,6 +73,7 @@ class Sidebar {
     const value = fields[`${parameter}Popup`].querySelectorAll("input")[1];
     const tbody = fields[`${parameter}Table`].querySelector("tbody");
     const children = Array.from(tbody.querySelectorAll("tr"));
+    let type = "number";
     let min = 0;
     let max = 1;
     let step = 0.01;
@@ -80,6 +81,13 @@ class Sidebar {
     if (parameter === "speed") {
       max = null;
       step = 100;
+    }
+
+    if (parameter === "color") {
+      max = null;
+      min = null;
+      step = null;
+      type = "color";
     }
 
     return {
@@ -91,6 +99,7 @@ class Sidebar {
       max: max,
       min: min,
       step: step,
+      type: type,
     };
   }
 
@@ -103,8 +112,9 @@ class Sidebar {
   input(value, options) {
     const step = value === "time" ? 0.01 : options.step;
     const max = value === "time" ? 1 : options.max;
+    const type = value === "time" ? "number" : options.type;
     return `<input
-        type="number"
+        type="${type}"
         step="${step}"
         min="${options.min}"
         max="${max}"
@@ -115,8 +125,8 @@ class Sidebar {
   createTableRow(options) {
     const tr = document.createElement("tr");
     tr.innerHTML = `
-    <tr>
-      <td>
+    <tr class="">
+      <td class="timeInput">
         ${this.input("time", options)}
       </td>
       <td>
@@ -129,34 +139,30 @@ class Sidebar {
   }
 
   sortWithNewElement(tr, options) {
-    console.log("hi");
-
-    options.tbody.textContent = "";
-    options.children.push(tr);
-    console.dir(options.children);
-
-    options.children
+    const firstTr = options.tbody.querySelector("tr");
+    const tds = options.tbody.querySelectorAll(".timeInput");
+    const trs = [];
+    tds.forEach((td) => {
+      trs.push(td.parentNode);
+    });
+    trs.push(tr);
+    trs
       .sort((first, second) => {
-        const a =
-          +first.querySelector("td").textContent === undefined
-            ? +first.querySelector("td > input").value
-            : +first.querySelector("td").textContent;
-        const b =
-          +second.querySelector("td").textContent === undefined
-            ? +second.querySelector("td > input").value
-            : +second.querySelector("td").textContent;
-        console.log(a, b);
+        const a = +first.querySelector("td > input").value;
+        const b = +second.querySelector("td > input").value;
 
-        return a - b;
+        return b - a;
       })
       .forEach((tr) => {
-        options.tbody.append(tr);
+        options.tbody.insertBefore(tr, firstTr.nextSibling);
       });
   }
 
   minimumScaleMultiplier() {
-    const input = fields.minimumScaleMultiplier.querySelector("input");
-    const span = fields.minimumScaleMultiplier.querySelector("span");
+    const input = fields.minimumScaleMultiplier;
+    const span = fields.minimumScaleMultiplier.parentElement.querySelector(
+      "span"
+    );
 
     input.addEventListener("input", () => {
       span.textContent = input.value;
@@ -164,8 +170,10 @@ class Sidebar {
   }
 
   minimumSpeedMultiplier() {
-    const input = fields.minimumSpeedMultiplier.querySelector("input");
-    const span = fields.minimumSpeedMultiplier.querySelector("span");
+    const input = fields.minimumSpeedMultiplier;
+    const span = fields.minimumSpeedMultiplier.parentElement.querySelector(
+      "span"
+    );
 
     input.addEventListener("input", () => {
       span.textContent = input.value;

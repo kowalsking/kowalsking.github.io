@@ -125,11 +125,12 @@ h5 {
   text-align: center;
 }
 .particleControls input {
-  width: 45px;
+  width: 55px;
 }
 
 .alphaPopup,
 .scalePopup,
+.colorPopup,
 .speedPopup {
   display: none;
 }

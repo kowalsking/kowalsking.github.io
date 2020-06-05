@@ -25,7 +25,13 @@
           <div id="framerate"></div>
           <button id="prettyBtn">Accept</button>
           <div>
-            <input type="file" name="file" id="file" />
+            <input
+              type="file"
+              name="file"
+              id="file"
+              accept=".json, .png, .jpg, .jpeg"
+              multiple
+            />
           </div>
           <div class="bigwin_setup">
             <div class="bigwin_wrapper">
@@ -70,7 +76,7 @@
                           step="0.01"
                           min="0"
                           max="1"
-                          value="0"
+                          value="1"
                         />
                       </td>
                     </tr>
@@ -116,7 +122,7 @@
                           step="0.01"
                           min="0"
                           max="1"
-                          value="1"
+                          value="0.45"
                         />
                       </td>
                     </tr>
@@ -128,7 +134,7 @@
                           step="0.01"
                           min="0"
                           max="1"
-                          value="1"
+                          value="0.45"
                         />
                       </td>
                     </tr>
@@ -143,10 +149,11 @@
                   /></span>
                   <button class="ok scale">ok</button>
                 </div>
-                <div class="minimumScaleMultiplier">
+                <div>
                   <div>
                     minimumScaleMultiplier:
                     <input
+                      class="minimumScaleMultiplier"
                       type="range"
                       min="0"
                       max="1"
@@ -190,10 +197,11 @@
                   <button class="ok speed">ok</button>
                 </div>
 
-                <div class="minimumSpeedMultiplier">
+                <div>
                   <div>
                     minimumSpeedMultiplier:
                     <input
+                      class="minimumSpeedMultiplier"
                       type="range"
                       min="0"
                       max="10"
@@ -208,8 +216,259 @@
                   </div>
                 </div>
               </details>
+
+              <details>
+                <summary>Color</summary>
+                <table class="colorTable">
+                  <thead>
+                    <th>Time</th>
+                    <th>Value</th>
+                    <th><button class="addParameter color">+</button></th>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>0</td>
+                      <td>
+                        <input type="color" value="#ffffff" />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>1</td>
+                      <td>
+                        <input type="color" value="#f9fcc0" />
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <div class="colorPopup">
+                  <span
+                    >Time: <input type="number" step="0.01" min="0" max="1"
+                  /></span>
+                  <span>Value: <input type="color" /></span>
+                  <button class="ok color">ok</button>
+                </div>
+              </details>
+
+              <details>
+                <summary>Acceleration</summary>
+                <table class="acceleration">
+                  <thead>
+                    <th>Time</th>
+                    <th>Value</th>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>x</td>
+                      <td>
+                        <input
+                          class="accelerationX"
+                          type="number"
+                          step="100"
+                          min="0"
+                          value="0"
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>y</td>
+                      <td>
+                        <input
+                          class="accelerationY"
+                          type="number"
+                          step="100"
+                          min="0"
+                          value="2000"
+                        />
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </details>
+
+              <details>
+                <summary>Start Rotation</summary>
+                <table class="startRotation">
+                  <thead>
+                    <th>Time</th>
+                    <th>Value</th>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>min</td>
+                      <td>
+                        <input
+                          class="startRotationMin"
+                          type="number"
+                          step="100"
+                          min="0"
+                          value="0"
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>max</td>
+                      <td>
+                        <input
+                          class="startRotationMax"
+                          type="number"
+                          step="10"
+                          min="0"
+                          value="360"
+                        />
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </details>
+
+              <details>
+                <summary>Rotation Speed</summary>
+                <table class="rotationSpeed">
+                  <thead>
+                    <th>Time</th>
+                    <th>Value</th>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>min</td>
+                      <td>
+                        <input
+                          class="rotationSpeedMin"
+                          type="number"
+                          step="10"
+                          min="0"
+                          value="100"
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>max</td>
+                      <td>
+                        <input
+                          class="rotationSpeedMax"
+                          type="number"
+                          step="10"
+                          min="0"
+                          value="200"
+                        />
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </details>
+
+              <details>
+                <summary>Lifetime</summary>
+                <table class="lifetime">
+                  <thead>
+                    <th>Time</th>
+                    <th>Value</th>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>min</td>
+                      <td>
+                        <input
+                          class="lifetimeMin"
+                          type="number"
+                          step="0.01"
+                          min="0"
+                          value="1.5"
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>max</td>
+                      <td>
+                        <input
+                          class="lifetimeMax"
+                          type="number"
+                          step="0.01"
+                          min="0"
+                          value="1.5"
+                        />
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </details>
+
+              <details>
+                <summary>Position</summary>
+                <table class="position">
+                  <thead>
+                    <th>Time</th>
+                    <th>Value</th>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>x</td>
+                      <td>
+                        <input
+                          class="positionX"
+                          type="number"
+                          step="10"
+                          min="0"
+                          value="0"
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>y</td>
+                      <td>
+                        <input
+                          class="positionY"
+                          type="number"
+                          step="10"
+                          min="0"
+                          value="0"
+                        />
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </details>
+
+              <details>
+                <summary>Frequency</summary>
+                <input
+                  class="frequency"
+                  type="number"
+                  step="0.001"
+                  min="0"
+                  value="0.001"
+                />
+              </details>
+
+              <details>
+                <summary>Emitter Lifetime</summary>
+                <input
+                  class="emitterLifetime"
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  value="0.5"
+                />
+              </details>
+
+              <details>
+                <summary>Max Particles</summary>
+                <input
+                  class="maxParticles"
+                  type="number"
+                  step="10"
+                  min="0"
+                  value="70"
+                />
+              </details>
+
+              <details>
+                <summary>Spawn Type</summary>
+                <input class="spawnType" type="text" value="point" />
+              </details>
             </div>
-            <textarea class="emitterTextarea" cols="40" rows="30">
+            <!-- <textarea class="emitterTextarea" cols="40" rows="30">
 {
   "alpha": {
       "start": 1,
@@ -269,7 +528,7 @@
   "addAtBack": true,
   "spawnType": "point"
 }
-            </textarea>
+            </textarea> -->
           </div>
           <div>
             <div class="config_header">Image config:</div>

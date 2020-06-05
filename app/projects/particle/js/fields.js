@@ -16,17 +16,35 @@ const fields = {
   loader: document.querySelector(".loader"),
   deleteParameter: document.querySelectorAll(".deleteParameter"),
   addParameter: document.querySelector(".addParameter"),
+
   alphaPopup: document.querySelector(".alphaPopup"),
   speedPopup: document.querySelector(".speedPopup"),
   scalePopup: document.querySelector(".scalePopup"),
+  colorPopup: document.querySelector(".colorPopup"),
   speedTable: document.querySelector(".speedTable"),
   scaleTable: document.querySelector(".scaleTable"),
+  colorTable: document.querySelector(".colorTable"),
   alphaTable: document.querySelector(".alphaTable"),
-  alphaTime: document.querySelector(".alphaTime"),
+
   particleControls: document.querySelector(".particleControls"),
   minimumScaleMultiplier: document.querySelector(".minimumScaleMultiplier"),
   minimumSpeedMultiplier: document.querySelector(".minimumSpeedMultiplier"),
   isStepped: document.querySelector(".isStepped"),
+
+  spawnType: document.querySelector(".spawnType"),
+  maxParticles: document.querySelector(".maxParticles"),
+  emitterLifetime: document.querySelector(".emitterLifetime"),
+  frequency: document.querySelector(".frequency"),
+  accelerationX: document.querySelector(".accelerationX"),
+  accelerationY: document.querySelector(".accelerationY"),
+  positionX: document.querySelector(".positionX"),
+  positionY: document.querySelector(".positionY"),
+  lifetimeMax: document.querySelector(".lifetimeMax"),
+  lifetimeMin: document.querySelector(".lifetimeMin"),
+  startRotationMin: document.querySelector(".startRotationMin"),
+  startRotationMax: document.querySelector(".startRotationMax"),
+  rotationSpeedMin: document.querySelector(".rotationSpeedMin"),
+  rotationSpeedMax: document.querySelector(".rotationSpeedMax"),
 };
 
 export default fields;

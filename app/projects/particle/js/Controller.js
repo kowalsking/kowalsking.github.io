@@ -1,5 +1,6 @@
 import { bigwinList } from "./config.js";
 import fields from "./fields.js";
+import ParticleConfig from "./ParticleConfig.js";
 
 class Controller {
   constructor(imagePaths) {
@@ -17,7 +18,8 @@ class Controller {
   }
 
   configSetup() {
-    this.config = JSON.parse(fields.emitterTextarea.value);
+    this.config = new ParticleConfig();
+    // this.config = JSON.parse(fields.emitterTextarea.value);
     this.imagePaths = JSON.parse(fields.imageTextarea.value);
   }
 
@@ -278,28 +280,95 @@ class Controller {
       this.setupParticle();
     });
 
-    fields.file.addEventListener("change", (e) => {
-      const file = e.target.files[0];
-      const reader = new FileReader();
-      const url = URL.createObjectURL(file);
-      console.dir(file);
-
-      const loader = PIXI.loader;
-
-      reader.addEventListener("load", (e) => {
-        try {
-          console.log(reader.result);
-          const json = JSON.parse(reader.result);
-          loader.add(`imgJSON${Math.random()}`, url);
-          loader.load((_, res) => {
-            console.log(res);
-          });
-          this.upgradeTextures(json, file.name);
-        } catch (e) {
-          console.log(e);
-        }
+    const loadFile = function (file) {
+      return new Promise((resolve, reject) => {
+        const fileReader = new FileReader();
+        fileReader.onerror = (e) => {
+          reject("Error: " + file.name);
+        };
+        fileReader.onload = (e) => {
+          resolve(e.target.result);
+        };
+        fileReader.readAsDataURL(file);
       });
-      reader.readAsText(file);
+    };
+
+    async function loadFiles(files) {
+      for (let i = 0; i < files.length; i++) {
+        const url = await loadFile(files[i]);
+        const filename = files[i].name;
+        const name = filename.split(".")[0];
+        const extension = filename.split(".")[1];
+        const loader = new PIXI.loaders.Loader();
+        switch (extension) {
+          case "json":
+            loader._afterMiddleware = [];
+            loader.add(filename, url);
+            break;
+          case "png":
+          case "jpg":
+          case "jpeg":
+            loader.add(filename, url);
+            break;
+          default:
+            throw "Unsupported type: " + extension;
+            break;
+        }
+        await new Promise((resolve) => {
+          loader.load((_, res) => {
+            if (extension === "json") {
+              const jsonData = res[filename].data;
+              if (jsonData.frames.length) {
+                const framesObj = {};
+                for (let i = 0; i < jsonData.frames.length; i++) {
+                  const frameElem = jsonData.frames[i];
+                  framesObj[frameElem.filename] = frameElem;
+                  delete frameElem.filename;
+                }
+                jsonData.frames = framesObj;
+              }
+
+              const imageForAtlas =
+                PIXI.utils.TextureCache[jsonData.meta.image];
+              if (imageForAtlas) {
+                const spritesheet = new PIXI.Spritesheet(
+                  imageForAtlas.baseTexture,
+                  jsonData,
+                  filename
+                );
+                spritesheet.parse(() => {
+                  res[filename].spritesheet = spritesheet;
+                  res[filename].textures = spritesheet.textures;
+                });
+              } else {
+                throw "No image for json: " + jsonData.meta.image;
+              }
+            }
+
+            resolve();
+          });
+        });
+      }
+      return 123; //We can return some info here
+    }
+
+    fields.file.addEventListener("change", (e) => {
+      if (!e.target.files.length) return;
+
+      const filesArray = [];
+      for (let i = 0; i < e.target.files.length; i++)
+        filesArray.push(e.target.files[i]);
+
+      filesArray.sort((a, b) => {
+        return a.name.indexOf(".json") - b.name.indexOf(".json");
+      });
+
+      loadFiles(filesArray)
+        .then((result) => {})
+        .catch((e) => {
+          console.error(e);
+          alert(e);
+        });
     });
   }
 
