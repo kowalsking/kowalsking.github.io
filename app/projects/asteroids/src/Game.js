@@ -49,13 +49,12 @@ class Game {
     };
   }
 
-  newAsteroid(x, y) {
-    const radius = this.config.astrSize / 2;
+  newAsteroid(x, y, r = this.config.astrSize / 2) {
     const velocity = (Math.random() * this.config.astrSpd) / this.config.fps;
     return {
       x: x,
       y: y,
-      radius: radius,
+      radius: r,
       xv: velocity * this.changeDirection(),
       yv: velocity * this.changeDirection(),
     };
@@ -72,12 +71,15 @@ class Game {
   }
 
   shootBullets(ship) {
+    const fps = this.config.fps;
+    const speed = this.config.bulletSpd;
+
     const bullet = {
       x: ship.x + ship.radius * Math.cos(ship.a),
       y: ship.y - ship.radius * Math.sin(ship.a),
-      size: 4,
-      xv: (this.config.bulletSpd * Math.cos(ship.a)) / this.config.fps,
-      yv: (-this.config.bulletSpd * Math.sin(ship.a)) / this.config.fps,
+      size: 2,
+      xv: (speed * Math.cos(ship.a)) / fps,
+      yv: (-speed * Math.sin(ship.a)) / fps,
     };
 
     return ship.bullets.push(bullet);
@@ -91,6 +93,35 @@ class Game {
         state.isGameOver = true;
       }
     });
+  }
+
+  shellHit(state, bullets, asteroids) {
+    bullets.forEach((bullet) => {
+      asteroids.forEach((roid, idx) => {
+        const dbbr = this.distBetweenPoints(bullet.x, bullet.y, roid.x, roid.y);
+        if (dbbr < roid.radius) {
+          state.score += 10;
+          this.destroyAsteroid(asteroids, idx);
+        }
+      });
+    });
+  }
+
+  destroyAsteroid(asteroids, i) {
+    const r = asteroids[i].radius;
+    const size = this.config.astrSize;
+    if (r === size / 2 || r === size / 4) {
+      this.splitInTwo(asteroids, i);
+    }
+    asteroids.splice(i, 1);
+    return asteroids;
+  }
+
+  splitInTwo(asteroids, i) {
+    const roid = asteroids[i];
+    asteroids.push(this.newAsteroid(roid.x, roid.y, roid.radius / 2));
+    asteroids.push(this.newAsteroid(roid.x, roid.y, roid.radius / 2));
+    // return asteroids;
   }
 
   changeDirection() {

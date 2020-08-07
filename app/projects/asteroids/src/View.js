@@ -77,7 +77,16 @@ class View {
     });
   }
 
-  drawFinalScreen(score = 12) {
+  drawScore(score) {
+    this.context.textAlign = "start";
+    this.context.textBaseline = "top";
+    this.context.fillStyle = "white";
+    this.context.font = '14px "Press start 2P"';
+
+    this.context.fillText(`Score: ${score}`, 50, 50);
+  }
+
+  drawFinalScreen(score) {
     this.clearScreen();
     this.context.fillStyle = "white";
     this.context.font = '18px "Press Start 2P"';

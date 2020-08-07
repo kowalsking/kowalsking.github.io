@@ -13,7 +13,6 @@ class Controller {
     this.setupConfig();
     this.setupShip();
     this.setupAsteroids();
-    // this.setupBullets();
     this.setupStateOfGame();
     this.eventsHandlers();
   }
@@ -28,10 +27,6 @@ class Controller {
 
   setupAsteroids() {
     this.allAsteroids = this.game.createAsteroids();
-  }
-
-  setupBullets() {
-    this.bullet = this.game.createBullet(this.ship);
   }
 
   setupStateOfGame() {
@@ -49,6 +44,8 @@ class Controller {
       this.view.drawShip(this.ship);
       this.view.drawAsteroids(this.allAsteroids);
       this.view.drawBullets(this.ship.bullets);
+      this.view.drawScore(this.state.score);
+
       this.ship.moving ? this.pushTheShip() : this.brakeTheShip();
 
       this.rotateShip();
@@ -61,6 +58,7 @@ class Controller {
       }
 
       this.game.checkCollision(this.state, this.ship, this.allAsteroids);
+      this.game.shellHit(this.state, this.ship.bullets, this.allAsteroids);
       this.game.handleEdgeOfSpace([this.ship]);
       this.game.handleEdgeOfSpace(this.allAsteroids);
     }, 1000 / this.config.fps);
@@ -142,7 +140,7 @@ class Controller {
   }
 
   stopGame() {
-    this.view.drawFinalScreen();
+    this.view.drawFinalScreen(this.state.score);
   }
 }
 
