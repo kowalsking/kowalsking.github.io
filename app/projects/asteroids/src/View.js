@@ -68,6 +68,15 @@ class View {
     }
   }
 
+  drawBullets(bullets) {
+    bullets.forEach((bullet) => {
+      this.context.fillStyle = "red";
+      this.context.beginPath();
+      this.context.arc(bullet.x, bullet.y, bullet.size, 0, Math.PI * 2, false);
+      this.context.fill();
+    });
+  }
+
   drawFinalScreen(score = 12) {
     this.clearScreen();
     this.context.fillStyle = "white";

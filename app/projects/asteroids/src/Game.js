@@ -16,6 +16,7 @@ class Game {
       astrSize: 100,
       astrSpd: 50,
       astrNum: 4,
+      bulletSpd: 500,
     });
   }
 
@@ -31,6 +32,8 @@ class Game {
       a: this.degreesToRadians(90),
       rotation: 0,
       moving: false,
+      canShoot: true,
+      bullets: [],
       pos: {
         x: 0,
         y: 0,
@@ -66,6 +69,18 @@ class Game {
       allAsteroids.push(this.newAsteroid(x, y));
     }
     return allAsteroids;
+  }
+
+  shootBullets(ship) {
+    const bullet = {
+      x: ship.x + ship.radius * Math.cos(ship.a),
+      y: ship.y - ship.radius * Math.sin(ship.a),
+      size: 4,
+      xv: (this.config.bulletSpd * Math.cos(ship.a)) / this.config.fps,
+      yv: (-this.config.bulletSpd * Math.sin(ship.a)) / this.config.fps,
+    };
+
+    return ship.bullets.push(bullet);
   }
 
   checkCollision(state, ship, asteroids) {

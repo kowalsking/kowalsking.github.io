@@ -13,6 +13,7 @@ class Controller {
     this.setupConfig();
     this.setupShip();
     this.setupAsteroids();
+    // this.setupBullets();
     this.setupStateOfGame();
     this.eventsHandlers();
   }
@@ -29,6 +30,10 @@ class Controller {
     this.allAsteroids = this.game.createAsteroids();
   }
 
+  setupBullets() {
+    this.bullet = this.game.createBullet(this.ship);
+  }
+
   setupStateOfGame() {
     this.state = this.game.getState(this.allAsteroids);
   }
@@ -43,12 +48,13 @@ class Controller {
       this.view.drawSpace();
       this.view.drawShip(this.ship);
       this.view.drawAsteroids(this.allAsteroids);
-
+      this.view.drawBullets(this.ship.bullets);
       this.ship.moving ? this.pushTheShip() : this.brakeTheShip();
 
       this.rotateShip();
       this.moveShip();
       this.moveAsteroids();
+      this.moveBullet();
 
       if (this.state.isGameOver) {
         this.stopGame();
@@ -90,6 +96,13 @@ class Controller {
     });
   }
 
+  moveBullet() {
+    this.ship.bullets.forEach((bullet) => {
+      bullet.x += bullet.xv;
+      bullet.y += bullet.yv;
+    });
+  }
+
   keyDown(e) {
     const rotationSpd = this.config.rotationSpd;
     const fps = this.config.fps;
@@ -98,6 +111,9 @@ class Controller {
         if (this.state.isGameOver) {
           this.setup();
         }
+        break;
+      case 32: // space bar (shoot laser)
+        this.game.shootBullets(this.ship);
         break;
       case 37: // left
         this.ship.rotation = rotationSpd / fps;
