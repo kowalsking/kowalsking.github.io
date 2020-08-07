@@ -40,28 +40,40 @@ class Controller {
 
   update() {
     setInterval(() => {
-      this.view.drawSpace();
-      this.view.drawShip(this.ship);
-      this.view.drawAsteroids(this.allAsteroids);
-      this.view.drawBullets(this.ship.bullets);
-      this.view.drawScore(this.state.score);
-
-      this.ship.moving ? this.pushTheShip() : this.brakeTheShip();
-
-      this.rotateShip();
-      this.moveShip();
-      this.moveAsteroids();
-      this.moveBullet();
-
-      if (this.state.isGameOver) {
-        this.stopGame();
-      }
-
-      this.game.checkCollision(this.state, this.ship, this.allAsteroids);
-      this.game.shellHit(this.state, this.ship.bullets, this.allAsteroids);
-      this.game.handleEdgeOfSpace([this.ship]);
-      this.game.handleEdgeOfSpace(this.allAsteroids);
+      this.updateView();
+      this.updateMoving();
+      this.checkCollision();
+      this.checkIsGameOver();
     }, 1000 / this.config.fps);
+  }
+
+  updateView() {
+    this.view.drawSpace();
+    this.view.drawShip(this.ship);
+    this.view.drawAsteroids(this.allAsteroids);
+    this.view.drawBullets(this.ship.bullets);
+    this.view.drawScore(this.state.score);
+  }
+
+  updateMoving() {
+    this.ship.moving ? this.pushTheShip() : this.brakeTheShip();
+    this.rotateShip();
+    this.moveShip();
+    this.moveAsteroids();
+    this.moveBullet();
+  }
+
+  updateCollision() {
+    this.game.checkCollision(this.state, this.ship, this.allAsteroids);
+    this.game.shellHit(this.state, this.ship.bullets, this.allAsteroids);
+    this.game.handleEdgeOfSpace([this.ship]);
+    this.game.handleEdgeOfSpace(this.allAsteroids);
+  }
+
+  checkIsGameOver() {
+    if (this.state.isGameOver) {
+      this.stopGame();
+    }
   }
 
   pushTheShip() {
