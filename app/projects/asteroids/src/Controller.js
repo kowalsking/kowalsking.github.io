@@ -30,7 +30,7 @@ class Controller {
   }
 
   setupStateOfGame() {
-    this.state = this.game.getState(this.allAsteroids);
+    this.state = this.game.getState();
   }
 
   eventsHandlers() {
@@ -63,7 +63,7 @@ class Controller {
     this.moveBullet();
   }
 
-  updateCollision() {
+  checkCollision() {
     this.game.checkCollision(this.state, this.ship, this.allAsteroids);
     this.game.shellHit(this.state, this.ship.bullets, this.allAsteroids);
     this.game.handleEdgeOfSpace([this.ship]);

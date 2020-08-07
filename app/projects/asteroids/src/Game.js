@@ -41,11 +41,10 @@ class Game {
     };
   }
 
-  getState(asteroids) {
+  getState() {
     return {
       score: 0,
       isGameOver: false,
-      asteroids,
     };
   }
 
