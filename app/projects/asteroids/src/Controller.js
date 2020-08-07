@@ -13,6 +13,7 @@ class Controller {
     this.setupConfig();
     this.setupShip();
     this.setupAsteroids();
+    this.setupStateOfGame();
     this.eventsHandlers();
   }
 
@@ -26,7 +27,10 @@ class Controller {
 
   setupAsteroids() {
     this.allAsteroids = this.game.createAsteroids();
-    console.log(this.allAsteroids);
+  }
+
+  setupStateOfGame() {
+    this.state = this.game.getState(this.allAsteroids);
   }
 
   eventsHandlers() {
@@ -46,7 +50,11 @@ class Controller {
       this.moveShip();
       this.moveAsteroids();
 
-      this.game.checkCollision(this.ship, this.allAsteroids);
+      if (this.state.isGameOver) {
+        this.stopGame();
+      }
+
+      this.game.checkCollision(this.state, this.ship, this.allAsteroids);
       this.game.handleEdgeOfSpace([this.ship]);
       this.game.handleEdgeOfSpace(this.allAsteroids);
     }, 1000 / this.config.fps);
@@ -86,6 +94,11 @@ class Controller {
     const rotationSpd = this.config.rotationSpd;
     const fps = this.config.fps;
     switch (e.keyCode) {
+      case 13: // ENTER
+        if (this.state.isGameOver) {
+          this.setup();
+        }
+        break;
       case 37: // left
         this.ship.rotation = rotationSpd / fps;
         break;
@@ -110,6 +123,10 @@ class Controller {
         this.ship.rotation = 0;
         break;
     }
+  }
+
+  stopGame() {
+    this.view.drawFinalScreen();
   }
 }
 

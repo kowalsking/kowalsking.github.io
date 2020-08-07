@@ -21,7 +21,7 @@ class View {
   }
 
   drawShip(ship) {
-    this.context.strokeStyle = "yellow";
+    this.context.strokeStyle = ship.color;
     this.context.beginPath();
     this.context.moveTo(
       // nose of the ship
@@ -39,13 +39,14 @@ class View {
       ship.y + ship.radius * (Math.sin(ship.a) + Math.cos(ship.a))
     );
 
-    this.context.fillStyle = "#FFCC00";
+    this.context.fillStyle = ship.color;
 
     this.context.closePath();
     ship.fillShip ? this.context.fill() : this.context.stroke();
   }
 
   drawAsteroids(asteroids) {
+    const numOfAngles = 5;
     for (let i = 0; i < asteroids.length; i++) {
       const r = asteroids[i].radius;
       const x = asteroids[i].x;
@@ -56,15 +57,35 @@ class View {
         x + r * Math.cos(Math.PI * 2),
         y + r * Math.sin(Math.PI * 2)
       );
-      for (let j = 0; j < 6; j++) {
+      for (let j = 0; j < 5; j++) {
         this.context.lineTo(
-          x + r * Math.cos(Math.PI * 2 + (j * Math.PI * 2) / 5),
-          y + r * Math.sin(Math.PI * 2 + (j * Math.PI * 2) / 5)
+          x + r * Math.cos(Math.PI * 2 + (j * Math.PI * 2) / numOfAngles),
+          y + r * Math.sin(Math.PI * 2 + (j * Math.PI * 2) / numOfAngles)
         );
       }
       this.context.closePath();
       this.context.stroke();
     }
+  }
+
+  drawFinalScreen(score = 12) {
+    this.clearScreen();
+    this.context.fillStyle = "white";
+    this.context.font = '18px "Press Start 2P"';
+    this.context.textAlign = "center";
+    this.context.textBaseline = "middle";
+    this.context.fillText("GAME OVER", this.width / 2, this.height / 2 - 48);
+    this.context.fillText(`Score: ${score}`, this.width / 2, this.height / 2);
+    this.context.fillText(
+      `Press ENTER to Restart`,
+      this.width / 2,
+      this.height / 2 + 48
+    );
+  }
+
+  clearScreen() {
+    this.context.fillStyle = "black";
+    this.context.fillRect(0, 0, this.width, this.height);
   }
 }
 

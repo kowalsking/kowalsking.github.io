@@ -22,6 +22,7 @@ class Game {
   createShip() {
     const size = this.config.shipSize;
     return {
+      color: "#FFCC00",
       x: this.width / 2,
       y: this.height / 2,
       fillShip: true,
@@ -34,6 +35,14 @@ class Game {
         x: 0,
         y: 0,
       },
+    };
+  }
+
+  getState(asteroids) {
+    return {
+      score: 0,
+      isGameOver: false,
+      asteroids,
     };
   }
 
@@ -59,15 +68,12 @@ class Game {
     return allAsteroids;
   }
 
-  checkCollision(ship, asteroids) {
+  checkCollision(state, ship, asteroids) {
     asteroids.forEach((roid) => {
       const dbp = this.distBetweenPoints(ship.x, ship.y, roid.x, roid.y); // dist between points
       const dbsr = ship.radius + roid.radius; // dist between ship & roid
       if (dbp < dbsr) {
-        ship.fillShip = false;
-        return;
-      } else if (dbp > dbsr) {
-        ship.fillShip = true;
+        state.isGameOver = true;
       }
     });
   }
