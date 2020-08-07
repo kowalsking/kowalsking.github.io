@@ -96,12 +96,13 @@ class Game {
   }
 
   shellHit(state, bullets, asteroids) {
-    bullets.forEach((bullet) => {
-      asteroids.forEach((roid, idx) => {
+    bullets.forEach((bullet, bindex) => {
+      asteroids.forEach((roid, rindex) => {
         const dbbr = this.distBetweenPoints(bullet.x, bullet.y, roid.x, roid.y);
         if (dbbr < roid.radius) {
           state.score += 10;
-          this.destroyAsteroid(asteroids, idx);
+          this.destroyAsteroid(asteroids, rindex);
+          this.destroyBullet(bullets, bindex);
         }
       });
     });
@@ -114,7 +115,10 @@ class Game {
       this.splitInTwo(asteroids, i);
     }
     asteroids.splice(i, 1);
-    return asteroids;
+  }
+
+  destroyBullet(bullets, i) {
+    bullets.splice(i, 1);
   }
 
   splitInTwo(asteroids, i) {
