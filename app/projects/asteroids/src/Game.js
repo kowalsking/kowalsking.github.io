@@ -9,13 +9,13 @@ class Game {
   createConfig() {
     return (this.config = {
       shipSize: 30,
-      fps: 30,
+      fps: 60,
       rotationSpd: this.degreesToRadians(360),
-      acceleration: 5,
+      acceleration: 6,
       braking: 0.7,
       astrSize: 100,
-      astrSpd: 50,
-      astrNum: 4,
+      astrSpd: 70,
+      astrNum: 6,
       bulletSpd: 500,
     });
   }
@@ -32,7 +32,6 @@ class Game {
       a: this.degreesToRadians(90),
       rotation: 0,
       moving: false,
-      canShoot: true,
       bullets: [],
       pos: {
         x: 0,
@@ -104,6 +103,16 @@ class Game {
           this.destroyBullet(bullets, bindex);
         }
       });
+    });
+  }
+
+  checkBulletsOutOfScreen(bullets) {
+    bullets.forEach((b, i) => {
+      const out = b.x < 0 || b.x > this.width || b.y < 0 || b.y > this.height;
+
+      if (out) {
+        bullets.splice(i, 1);
+      }
     });
   }
 

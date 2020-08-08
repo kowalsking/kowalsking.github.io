@@ -1,109 +1,113 @@
 class View {
-  constructor(element, width, height) {
-    this.element = element;
-    this.width = width;
-    this.height = height;
-
+  constructor() {
+    this.container = document.getElementById("content");
     this.setupCanvas();
   }
 
   setupCanvas() {
     this.canvas = document.createElement("canvas");
-    this.canvas.width = this.width;
-    this.canvas.height = this.height;
-    this.context = this.canvas.getContext("2d");
-    this.element.append(this.canvas);
+    this.ctx = this.canvas.getContext("2d");
+    this.updateCanvasDimensions();
+    this.container.append(this.canvas);
   }
 
-  drawSpace() {
-    this.context.fillStyle = "black";
-    this.context.fillRect(0, 0, this.width, this.height);
+  updateCanvasDimensions() {
+    this.canvas.width = this.container.clientWidth;
+    this.canvas.height = this.container.clientHeight;
   }
 
   drawShip(ship) {
-    this.context.strokeStyle = ship.color;
-    this.context.beginPath();
-    this.context.moveTo(
+    this.ctx.strokeStyle = ship.color;
+    this.ctx.beginPath();
+    this.ctx.moveTo(
       // nose of the ship
       ship.x + ship.radius * Math.cos(ship.a),
       ship.y - ship.radius * Math.sin(ship.a)
     );
-    this.context.lineTo(
+    this.ctx.lineTo(
       // rear left
       ship.x - ship.radius * (Math.cos(ship.a) + Math.sin(ship.a)),
       ship.y + ship.radius * (Math.sin(ship.a) - Math.cos(ship.a))
     );
-    this.context.lineTo(
+    this.ctx.lineTo(
       // rear right
       ship.x - ship.radius * (Math.cos(ship.a) - Math.sin(ship.a)),
       ship.y + ship.radius * (Math.sin(ship.a) + Math.cos(ship.a))
     );
 
-    this.context.fillStyle = ship.color;
+    this.ctx.fillStyle = ship.color;
 
-    this.context.closePath();
-    ship.fillShip ? this.context.fill() : this.context.stroke();
+    this.ctx.closePath();
+    ship.fillShip ? this.ctx.fill() : this.ctx.stroke();
   }
 
   drawAsteroids(asteroids) {
     const numOfAngles = 5;
-    for (let i = 0; i < asteroids.length; i++) {
-      const r = asteroids[i].radius;
-      const x = asteroids[i].x;
-      const y = asteroids[i].y;
-      this.context.strokeStyle = "white";
-      this.context.beginPath();
-      this.context.moveTo(
+    asteroids.forEach((roid) => {
+      const r = roid.radius;
+      const x = roid.x;
+      const y = roid.y;
+      this.ctx.strokeStyle = "white";
+      this.ctx.beginPath();
+      this.ctx.moveTo(
         x + r * Math.cos(Math.PI * 2),
         y + r * Math.sin(Math.PI * 2)
       );
       for (let j = 0; j < 5; j++) {
-        this.context.lineTo(
+        this.ctx.lineTo(
           x + r * Math.cos(Math.PI * 2 + (j * Math.PI * 2) / numOfAngles),
           y + r * Math.sin(Math.PI * 2 + (j * Math.PI * 2) / numOfAngles)
         );
       }
-      this.context.closePath();
-      this.context.stroke();
-    }
+      this.ctx.closePath();
+      this.ctx.stroke();
+    });
   }
 
   drawBullets(bullets) {
     bullets.forEach((bullet) => {
-      this.context.fillStyle = "red";
-      this.context.beginPath();
-      this.context.arc(bullet.x, bullet.y, bullet.size, 0, Math.PI * 2, false);
-      this.context.fill();
+      this.ctx.fillStyle = "red";
+      this.ctx.beginPath();
+      this.ctx.arc(bullet.x, bullet.y, bullet.size, 0, Math.PI * 2, false);
+      this.ctx.fill();
     });
   }
 
   drawScore(score) {
-    this.context.textAlign = "start";
-    this.context.textBaseline = "top";
-    this.context.fillStyle = "white";
-    this.context.font = '14px "Press start 2P"';
+    this.ctx.textAlign = "start";
+    this.ctx.textBaseline = "top";
+    this.ctx.fillStyle = "white";
+    this.ctx.font = '14px "Press start 2P"';
 
-    this.context.fillText(`Score: ${score}`, 50, 50);
+    this.ctx.fillText(`Score: ${score}`, 50, 50);
   }
 
   drawFinalScreen(score) {
     this.clearScreen();
-    this.context.fillStyle = "white";
-    this.context.font = '18px "Press Start 2P"';
-    this.context.textAlign = "center";
-    this.context.textBaseline = "middle";
-    this.context.fillText("GAME OVER", this.width / 2, this.height / 2 - 48);
-    this.context.fillText(`Score: ${score}`, this.width / 2, this.height / 2);
-    this.context.fillText(
+    this.ctx.fillStyle = "white";
+    this.ctx.font = '18px "Press Start 2P"';
+    this.ctx.textAlign = "center";
+    this.ctx.textBaseline = "middle";
+    this.ctx.fillText(
+      "GAME OVER",
+      this.canvas.width / 2,
+      this.canvas.height / 2 - 48
+    );
+    this.ctx.fillText(
+      `Score: ${score}`,
+      this.canvas.width / 2,
+      this.canvas.height / 2
+    );
+    this.ctx.fillText(
       `Press ENTER to Restart`,
-      this.width / 2,
-      this.height / 2 + 48
+      this.canvas.width / 2,
+      this.canvas.height / 2 + 48
     );
   }
 
   clearScreen() {
-    this.context.fillStyle = "black";
-    this.context.fillRect(0, 0, this.width, this.height);
+    this.ctx.fillStyle = "black";
+    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
   }
 }
 

@@ -1,15 +1,24 @@
+import Game from "./Game";
+import View from "./View";
+
 class Controller {
-  constructor(game, view) {
-    this.game = game;
-    this.view = view;
+  constructor() {
+    this.game = new Game();
+    this.view = new View();
 
-    this.game.markBoundaries(this.view.width, this.view.height);
+    this.game.markBoundaries(this.view.canvas.width, this.view.canvas.height);
 
+    this.init();
+  }
+
+  init() {
     this.setup();
-    this.update();
+    this.onResize();
+    requestAnimationFrame((time) => this.update(time));
   }
 
   setup() {
+    this.prevUpdateTime = 0;
     this.setupConfig();
     this.setupShip();
     this.setupAsteroids();
@@ -36,19 +45,22 @@ class Controller {
   eventsHandlers() {
     document.addEventListener("keydown", this.keyDown.bind(this));
     document.addEventListener("keyup", this.keyUp.bind(this));
+    window.addEventListener("resize", this.onResize.bind(this));
   }
 
-  update() {
-    setInterval(() => {
-      this.updateView();
-      this.updateMoving();
-      this.checkCollision();
-      this.checkIsGameOver();
-    }, 1000 / this.config.fps);
+  update(time) {
+    this.updateView();
+    this.updateMoving();
+    this.checkCollision();
+    this.checkIsGameOver();
+
+    this.prevUpdateTime = time;
+
+    requestAnimationFrame((time) => this.update(time));
   }
 
   updateView() {
-    this.view.drawSpace();
+    this.view.clearScreen();
     this.view.drawShip(this.ship);
     this.view.drawAsteroids(this.allAsteroids);
     this.view.drawBullets(this.ship.bullets);
@@ -68,6 +80,7 @@ class Controller {
     this.game.shellHit(this.state, this.ship.bullets, this.allAsteroids);
     this.game.handleEdgeOfSpace([this.ship]);
     this.game.handleEdgeOfSpace(this.allAsteroids);
+    this.game.checkBulletsOutOfScreen(this.ship.bullets);
   }
 
   checkIsGameOver() {
@@ -113,16 +126,31 @@ class Controller {
     });
   }
 
+  onResize() {
+    const width = this.view.container.clientWidth;
+    const height = this.view.container.clientHeight;
+
+    this.view.updateCanvasDimensions();
+    this.game.markBoundaries(width, height);
+  }
+
+  restart() {
+    this.ship = this.game.createShip();
+    this.prevUpdateTime = 0;
+    this.setupAsteroids();
+    this.setupStateOfGame();
+  }
+
   keyDown(e) {
     const rotationSpd = this.config.rotationSpd;
     const fps = this.config.fps;
     switch (e.keyCode) {
-      case 13: // ENTER
+      case 13: // enter
         if (this.state.isGameOver) {
-          this.setup();
+          this.restart();
         }
         break;
-      case 32: // space bar (shoot laser)
+      case 32: // space
         this.game.shootBullets(this.ship);
         break;
       case 37: // left
