@@ -1,11 +1,11 @@
 class View {
   constructor() {
-    this.container = document.getElementById("content");
     this.setupCanvas();
   }
 
   setupCanvas() {
-    this.canvas = document.createElement("canvas");
+    this.container = document.getElementById("content");
+    this.canvas = document.getElementById("canvas");
     this.ctx = this.canvas.getContext("2d");
     this.updateCanvasDimensions();
     this.container.append(this.canvas);

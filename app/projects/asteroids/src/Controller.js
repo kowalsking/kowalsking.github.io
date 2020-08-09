@@ -6,46 +6,31 @@ class Controller {
     this.game = new Game();
     this.view = new View();
 
-    this.game.markBoundaries(this.view.canvas.width, this.view.canvas.height);
+    this.width = this.view.canvas.width;
+    this.height = this.view.canvas.height;
+
+    this.game.markBoundaries(this.width, this.height);
 
     this.init();
   }
 
   init() {
-    this.setup();
+    this.game.setup();
+    this.eventsHandlers();
     this.onResize();
     requestAnimationFrame((time) => this.update(time));
   }
 
-  setup() {
-    this.prevUpdateTime = 0;
-    this.setupConfig();
-    this.setupShip();
-    this.setupAsteroids();
-    this.setupStateOfGame();
-    this.eventsHandlers();
-  }
-
-  setupConfig() {
-    this.config = this.game.createConfig();
-  }
-
-  setupShip() {
-    this.ship = this.game.createShip();
-  }
-
-  setupAsteroids() {
-    this.allAsteroids = this.game.createAsteroids();
-  }
-
-  setupStateOfGame() {
-    this.state = this.game.getState();
-  }
-
   eventsHandlers() {
-    document.addEventListener("keydown", this.keyDown.bind(this));
-    document.addEventListener("keyup", this.keyUp.bind(this));
-    window.addEventListener("resize", this.onResize.bind(this));
+    document.addEventListener("keydown", (e) => {
+      this.game.keyDown(e);
+    });
+    document.addEventListener("keyup", (e) => {
+      this.game.keyUp(e);
+    });
+    window.addEventListener("resize", () => {
+      this.onResize();
+    });
   }
 
   update(time) {
@@ -54,133 +39,51 @@ class Controller {
     this.checkCollision();
     this.checkIsGameOver();
 
-    this.prevUpdateTime = time;
+    this.game.prevUpdateTime = time;
 
     requestAnimationFrame((time) => this.update(time));
   }
 
   updateView() {
     this.view.clearScreen();
-    this.view.drawShip(this.ship);
-    this.view.drawAsteroids(this.allAsteroids);
-    this.view.drawBullets(this.ship.bullets);
-    this.view.drawScore(this.state.score);
+    this.view.drawShip(this.game.ship.body);
+    this.view.drawAsteroids(this.game.allAsteroids);
+    this.view.drawBullets(this.game.ship.body.bullets);
+    this.view.drawScore(this.game.state.score);
   }
 
   updateMoving() {
-    this.ship.moving ? this.pushTheShip() : this.brakeTheShip();
-    this.rotateShip();
-    this.moveShip();
-    this.moveAsteroids();
-    this.moveBullet();
+    this.game.ship.body.moving ? this.game.ship.push() : this.game.ship.brake();
+    this.game.ship.rotate();
+    this.game.ship.move();
+    this.game.ship.moveBullet();
+    this.game.moveAsteroids(this.game.allAsteroids);
   }
 
   checkCollision() {
-    this.game.checkCollision(this.state, this.ship, this.allAsteroids);
-    this.game.shellHit(this.state, this.ship.bullets, this.allAsteroids);
-    this.game.handleEdgeOfSpace([this.ship]);
-    this.game.handleEdgeOfSpace(this.allAsteroids);
-    this.game.checkBulletsOutOfScreen(this.ship.bullets);
+    const ship = this.game.ship.body;
+    this.game.checkCollision(this.game.state, ship, this.game.allAsteroids);
+    this.game.shellHit(this.game.state, ship.bullets, this.game.allAsteroids);
+    this.game.handleEdgeOfSpace([ship]);
+    this.game.handleEdgeOfSpace(this.game.allAsteroids);
+    this.game.removeBulletsOutOfScreen(ship.bullets);
   }
 
   checkIsGameOver() {
-    if (this.state.isGameOver) {
+    if (this.game.state.isGameOver) {
       this.stopGame();
     }
-  }
-
-  pushTheShip() {
-    const acceleration = this.config.acceleration;
-    const fps = this.config.fps;
-    this.ship.pos.x += (acceleration * Math.cos(this.ship.a)) / fps;
-    this.ship.pos.y -= (acceleration * Math.sin(this.ship.a)) / fps;
-  }
-
-  brakeTheShip() {
-    const fps = this.config.fps;
-    const braking = this.config.braking;
-    this.ship.pos.x -= (braking * this.ship.pos.x) / fps;
-    this.ship.pos.y -= (braking * this.ship.pos.y) / fps;
-  }
-
-  rotateShip() {
-    this.ship.a += this.ship.rotation;
-  }
-
-  moveShip() {
-    this.ship.x += this.ship.pos.x;
-    this.ship.y += this.ship.pos.y;
-  }
-
-  moveAsteroids() {
-    this.allAsteroids.forEach((roid) => {
-      roid.x += roid.xv;
-      roid.y += roid.yv;
-    });
-  }
-
-  moveBullet() {
-    this.ship.bullets.forEach((bullet) => {
-      bullet.x += bullet.xv;
-      bullet.y += bullet.yv;
-    });
   }
 
   onResize() {
     const width = this.view.container.clientWidth;
     const height = this.view.container.clientHeight;
-
     this.view.updateCanvasDimensions();
     this.game.markBoundaries(width, height);
   }
 
-  restart() {
-    this.ship = this.game.createShip();
-    this.prevUpdateTime = 0;
-    this.setupAsteroids();
-    this.setupStateOfGame();
-  }
-
-  keyDown(e) {
-    const rotationSpd = this.config.rotationSpd;
-    const fps = this.config.fps;
-    switch (e.keyCode) {
-      case 13: // enter
-        if (this.state.isGameOver) {
-          this.restart();
-        }
-        break;
-      case 32: // space
-        this.game.shootBullets(this.ship);
-        break;
-      case 37: // left
-        this.ship.rotation = rotationSpd / fps;
-        break;
-      case 38: // up
-        this.ship.moving = true;
-        break;
-      case 39: // right
-        this.ship.rotation = -rotationSpd / fps;
-        break;
-    }
-  }
-
-  keyUp(e) {
-    switch (e.keyCode) {
-      case 37: // left
-        this.ship.rotation = 0;
-        break;
-      case 38: // up
-        this.ship.moving = false;
-        break;
-      case 39: // right
-        this.ship.rotation = 0;
-        break;
-    }
-  }
-
   stopGame() {
-    this.view.drawFinalScreen(this.state.score);
+    this.view.drawFinalScreen(this.game.state.score);
   }
 }
 

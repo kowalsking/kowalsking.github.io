@@ -1,9 +1,40 @@
+import Ship from "./Ship";
+import Asteroid from "./Asteroid";
+
 class Game {
   constructor() {}
 
   markBoundaries(w, h) {
     this.width = w;
     this.height = h;
+  }
+
+  setup() {
+    this.prevUpdateTime = 0;
+    this.setupConfig();
+    this.setupShip();
+    this.setupAsteroids();
+    this.setupStateOfGame();
+  }
+
+  setupConfig() {
+    this.config = this.createConfig();
+  }
+
+  setupShip() {
+    const w = this.width;
+    const h = this.height;
+    const s = this.config.shipSize;
+    this.ship = new Ship(this.config);
+    this.ship.body = this.ship.create(w, h, s);
+  }
+
+  setupAsteroids() {
+    this.allAsteroids = this.createAsteroids();
+  }
+
+  setupStateOfGame() {
+    this.state = this.getState();
   }
 
   createConfig() {
@@ -18,26 +49,6 @@ class Game {
       astrNum: 6,
       bulletSpd: 500,
     });
-  }
-
-  createShip() {
-    const size = this.config.shipSize;
-    return {
-      color: "#FFCC00",
-      x: this.width / 2,
-      y: this.height / 2,
-      fillShip: true,
-      size: size,
-      radius: size / 2,
-      a: this.degreesToRadians(90),
-      rotation: 0,
-      moving: false,
-      bullets: [],
-      pos: {
-        x: 0,
-        y: 0,
-      },
-    };
   }
 
   getState() {
@@ -58,29 +69,23 @@ class Game {
     };
   }
 
+  moveAsteroids(asteroids) {
+    asteroids.forEach((roid) => {
+      roid.x += roid.xv;
+      roid.y += roid.yv;
+    });
+  }
+
   createAsteroids() {
     const allAsteroids = [];
     for (let i = 0; i < this.config.astrNum; i++) {
       const x = Math.random() * this.width;
       const y = Math.random() * this.height;
-      allAsteroids.push(this.newAsteroid(x, y));
+      const r = this.config.astrSize;
+      const asteroid = new Asteroid(this.config);
+      allAsteroids.push(asteroid.create(x, y));
     }
     return allAsteroids;
-  }
-
-  shootBullets(ship) {
-    const fps = this.config.fps;
-    const speed = this.config.bulletSpd;
-
-    const bullet = {
-      x: ship.x + ship.radius * Math.cos(ship.a),
-      y: ship.y - ship.radius * Math.sin(ship.a),
-      size: 2,
-      xv: (speed * Math.cos(ship.a)) / fps,
-      yv: (-speed * Math.sin(ship.a)) / fps,
-    };
-
-    return ship.bullets.push(bullet);
   }
 
   checkCollision(state, ship, asteroids) {
@@ -106,7 +111,7 @@ class Game {
     });
   }
 
-  checkBulletsOutOfScreen(bullets) {
+  removeBulletsOutOfScreen(bullets) {
     bullets.forEach((b, i) => {
       const out = b.x < 0 || b.x > this.width || b.y < 0 || b.y > this.height;
 
@@ -133,7 +138,6 @@ class Game {
     const roid = asteroids[i];
     asteroids.push(this.newAsteroid(roid.x, roid.y, roid.radius / 2));
     asteroids.push(this.newAsteroid(roid.x, roid.y, roid.radius / 2));
-    // return asteroids;
   }
 
   changeDirection() {
@@ -162,6 +166,51 @@ class Game {
         entity.y = 0 - entity.radius;
       }
     });
+  }
+
+  restart() {
+    this.setupShip();
+    this.prevUpdateTime = 0;
+    this.setupAsteroids();
+    this.setupStateOfGame();
+  }
+
+  keyDown(e) {
+    const rotationSpd = this.config.rotationSpd;
+    const fps = this.config.fps;
+    switch (e.keyCode) {
+      case 13: // enter
+        if (this.state.isGameOver) {
+          this.restart();
+        }
+        break;
+      case 32: // space
+        this.ship.shoot();
+        break;
+      case 37: // left
+        this.ship.body.rotation = rotationSpd / fps;
+        break;
+      case 38: // up
+        this.ship.body.moving = true;
+        break;
+      case 39: // right
+        this.ship.body.rotation = -rotationSpd / fps;
+        break;
+    }
+  }
+
+  keyUp(e) {
+    switch (e.keyCode) {
+      case 37: // left
+        this.ship.body.rotation = 0;
+        break;
+      case 38: // up
+        this.ship.body.moving = false;
+        break;
+      case 39: // right
+        this.ship.body.rotation = 0;
+        break;
+    }
   }
 }
 
