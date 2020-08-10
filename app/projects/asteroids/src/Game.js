@@ -81,7 +81,6 @@ class Game {
     for (let i = 0; i < this.config.astrNum; i++) {
       const x = Math.random() * this.width;
       const y = Math.random() * this.height;
-      const r = this.config.astrSize;
       const asteroid = new Asteroid(this.config);
       allAsteroids.push(asteroid.create(x, y));
     }
