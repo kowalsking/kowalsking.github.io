@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/5.3.3/pixi.min.js"></script>
+    <script src="https://code.createjs.com/1.0.0/tweenjs.min.js"></script>
+    <title>Slot machine</title>
+
+    <style>
+      #root {
+        text-align: center;
+      }
+      #spinButton {
+        padding: 15px 55px;
+        color: #0095ff;
+        background: #fff;
+        border: 2px solid #0095ff;
+        border-radius: 20px;
+        margin: 10px auto;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.5s all ease;
+        outline: none;
+      }
+      #spinButton:hover {
+        background: #0095ff;
+        color: #fff;
+        transition: 0.5s all ease;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root">
+      <div class="view"></div>
+      <button id="spinButton">SPIN ME</button>
+    </div>
+    <script src="index.js" type="module"></script>
+  </body>
+</html>
