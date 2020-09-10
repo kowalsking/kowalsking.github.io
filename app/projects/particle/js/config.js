@@ -76,32 +76,6 @@ export const imagePaths = {
   ],
 };
 
-// export const imagePaths = {
-//   spritesheet: "spritesheet.json",
-//   art: [
-//     {
-//       framerate: 30,
-//       loop: false,
-//       textures: [
-//         "RunRight01.png",
-//         "RunRight02.png",
-//         "RunRight03.png",
-//         "RunRight04.png",
-//       ],
-//     },
-//     {
-//       framerate: 30,
-//       loop: false,
-//       textures: [
-//         "RunRight04.png",
-//         "RunRight03.png",
-//         "RunRight02.png",
-//         "RunRight01.png",
-//       ],
-//     },
-//   ],
-// };
-
 export const particleConfig = {
   alpha: {
     start: 1,
@@ -170,6 +144,9 @@ export const bigwinList = {
     animation: "big_win_all",
     loopStartFrame: 28,
     loopEndFrame: 80,
+    emitEvent: "event_emitter_explosion",
+    startLoop: "startLoop",
+    endLoop: "endLoop",
   },
   dancing_lantern: {
     name: "Dancing Lantern",
@@ -178,6 +155,9 @@ export const bigwinList = {
     animation: "big_win_all",
     loopStartFrame: 24,
     loopEndFrame: 185,
+    emitEvent: "event_emitter_explosion",
+    startLoop: "startLoop",
+    endLoop: "endLoop",
   },
   fruit_cash: {
     name: "Fruit Cash",
@@ -186,6 +166,9 @@ export const bigwinList = {
     animation: "big_win_all",
     loopStartFrame: 23,
     loopEndFrame: 237,
+    emitEvent: "",
+    startLoop: "start",
+    endLoop: "end",
   },
   book_of_nile: {
     name: "Book Of Nile",
@@ -194,6 +177,9 @@ export const bigwinList = {
     animation: "big_win_all",
     loopStartFrame: 30,
     loopEndFrame: 630,
+    emitEvent: "event_coins_explosion",
+    startLoop: "startLoop",
+    endLoop: "endLoop",
   },
   lotus_fortune: {
     name: "Lotus Fortune",
@@ -202,5 +188,19 @@ export const bigwinList = {
     animation: "big_win_all",
     loopStartFrame: 85,
     loopEndFrame: 116,
+    emitEvent: "event_coins_explosion",
+    startLoop: "startLoop",
+    endLoop: "endLoop",
+  },
+  quick_cash_fruits: {
+    name: "Quick Cash Fruits",
+    code: 353,
+    path: "bigwin/quick_cash_fruits_bigWin/big_win.json",
+    animation: "big_win_all",
+    loopStartFrame: 33,
+    loopEndFrame: 70,
+    emitEvent: "",
+    startLoop: "startBgLoop",
+    endLoop: "endBgLoop",
   },
 };

@@ -1,0 +1,117 @@
+
+big_win.png
+size: 924,1924
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+BigWinTxt
+  rotate: false
+  xy: 4, 4
+  size: 916, 296
+  orig: 914, 299
+  offset: 0, -1
+  index: -1
+counter
+  rotate: false
+  xy: 4, 308
+  size: 6, 6
+  orig: 4, 4
+  offset: 0, -2
+  index: -1
+for_grid
+  rotate: false
+  xy: 4, 308
+  size: 6, 6
+  orig: 4, 4
+  offset: 0, -2
+  index: -1
+frame
+  rotate: false
+  xy: 18, 308
+  size: 752, 176
+  orig: 763, 245
+  offset: 8, 37
+  index: -1
+glow
+  rotate: false
+  xy: 4, 492
+  size: 296, 252
+  orig: 335, 284
+  offset: 20, 16
+  index: -1
+glow_start
+  rotate: false
+  xy: 308, 492
+  size: 304, 260
+  orig: 335, 284
+  offset: 16, 12
+  index: -1
+Grid
+  rotate: false
+  xy: 4, 760
+  size: 868, 408
+  orig: 868, 407
+  offset: 0, -1
+  index: -1
+NeonLight
+  rotate: false
+  xy: 4, 1176
+  size: 804, 196
+  orig: 821, 223
+  offset: 4, 15
+  index: -1
+particle
+  rotate: false
+  xy: 816, 1176
+  size: 96, 60
+  orig: 104, 60
+  offset: 4, 0
+  index: -1
+shade
+  rotate: false
+  xy: 4, 1380
+  size: 12, 12
+  orig: 10, 10
+  offset: 0, -2
+  index: -1
+shine
+  rotate: false
+  xy: 24, 1380
+  size: 532, 424
+  orig: 616, 504
+  offset: 32, 40
+  index: -1
+stripe
+  rotate: false
+  xy: 564, 1380
+  size: 72, 540
+  orig: 120, 552
+  offset: 24, 0
+  index: -1
+
+big_win_1.jpg
+size: 1956,204
+format: RGB888
+filter: Linear,Linear
+repeat: none
+flare_blue
+  rotate: false
+  xy: 1, 1
+  size: 650, 202
+  orig: 648, 200
+  offset: 0, -2
+  index: -1
+flare_orange
+  rotate: false
+  xy: 1305, 1
+  size: 650, 190
+  orig: 648, 188
+  offset: 0, -2
+  index: -1
+flare_pink
+  rotate: false
+  xy: 653, 1
+  size: 650, 198
+  orig: 648, 196
+  offset: 0, -2
+  index: -1

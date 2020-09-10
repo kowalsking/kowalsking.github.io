@@ -5,11 +5,11 @@ body {
 }
 
 #sidebar {
-  height: 100%; /* 100% Full-height */
   width: 0; /* 0 ширина - изменить это с помощью JavaScript */
   position: fixed; /* Оставайтесь на месте */
   z-index: 1; /* Оставайтесь сверху */
   top: 0; /* Оставайтесь наверху */
+  bottom: 0;
   right: 0;
   background-color: #eee; /* Фон черный*/
   overflow-x: hidden; /* Отключить горизонтальную прокрутку */
@@ -17,12 +17,13 @@ body {
   transition: 0.5s; /* 0.5 второй эффект перехода слайда в боковой навигации */
 }
 
-#sidebar a {
-  padding: 8px;
-  text-decoration: none;
-  font-size: 25px;
-  display: block;
-  transition: 0.3s;
+#sidebar:-webkit-scrollbar {
+  width: 0;
+}
+::-webkit-scrollbar {
+  /* chrome based */
+  width: 0px; /* ширина scrollbar'a */
+  background: transparent; /* опционально */
 }
 
 #sidebar .closeSidebar {
@@ -30,6 +31,11 @@ body {
   top: 0;
   right: 25px;
   font-size: 36px;
+  padding: 8px;
+  text-decoration: none;
+  font-size: 25px;
+  display: block;
+  transition: 0.3s;
 }
 
 .container {
@@ -37,7 +43,7 @@ body {
 }
 
 .openSidebar {
-  font-weight: 700;
+  display: none;
   color: white;
   text-decoration: none;
   cursor: pointer;
@@ -76,10 +82,6 @@ body {
   border: 2px solid red;
 }
 
-.config_header {
-  font-weight: 700;
-}
-
 .loader {
   position: absolute;
   top: 40%;
@@ -112,6 +114,35 @@ body {
   }
 }
 
+.config_button {
+  background: #efb848;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 25px;
+  padding: 8px 15px;
+  outline: none;
+  border: none;
+  color: white;
+}
+
+.config_button:hover {
+  filter: brightness(0.9);
+}
+
+.collapse_button {
+  background: #3c59a0;
+  cursor: pointer;
+  border-radius: 25px;
+  padding: 8px 15px;
+  outline: none;
+  border: none;
+  color: white;
+}
+
+.config_button:hover {
+  filter: brightness(0.9);
+}
+
 h5 {
   display: inline;
 }
@@ -128,14 +159,201 @@ h5 {
   width: 55px;
 }
 
+.particleControls .property_header .customFile {
+  width: 100%;
+}
+
 .alphaPopup,
 .scalePopup,
 .colorPopup,
+.accelerationXPopup,
+.accelerationYPopup,
+.rotationSpeedPopup,
 .speedPopup {
   display: none;
+  margin: 5px;
+  padding: 5px;
+  background-color: #dfdfdf;
 }
 
 summary {
   outline: none;
   cursor: pointer;
+}
+
+.emissionRectangle,
+.emissionRing,
+.emissionCircle,
+.emissionBurst {
+  display: none;
+}
+
+.property_header {
+  margin-bottom: 15px;
+}
+
+.property_header > summary {
+  font-size: x-large;
+}
+
+.property_header > details {
+  padding-left: 15px;
+}
+
+.sliderComplex {
+  width: 85%;
+}
+
+.sliderHeader {
+  display: flex;
+  justify-content: space-between;
+}
+
+.sliderMinMax {
+  display: flex;
+  justify-content: space-between;
+}
+
+.sliderComplex .slider {
+  width: 100%;
+}
+
+.listValue {
+  width: 80%;
+  margin-left: 20%;
+}
+.okCancelButton {
+  /* background-color: #bfbfb7; */
+  color: white;
+  padding: 3px 10px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  outline: none;
+}
+
+.ok {
+  background-color: #3e7c3e;
+}
+
+.cancel {
+  background-color: #9b4d4d;
+}
+.detailsClass {
+  margin: 15px 0;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #ccc;
+}
+
+.okCancelButton:hover {
+  filter: brightness(0.9);
+}
+
+input {
+  border: 1px solid #ccc;
+}
+
+.simple_prop {
+  margin: 5px 0;
+  width: 55%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.vl {
+  border-left: 2px solid black;
+  height: 20px;
+}
+
+.particleControls > .sliderComplex {
+  width: 100%;
+}
+
+.disable {
+  display: none;
+}
+
+.popupProp {
+  display: flex;
+  justify-content: space-between;
+}
+
+.minimumSmultiplier {
+  margin: 5px;
+  padding: 5px;
+}
+
+.okCancelButtonWrapper {
+  margin-top: 5px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.deleteParameter {
+  background-color: #9b4d4d;
+  background-color: white;
+  color: #9b4d4d;
+  border-radius: 4px;
+  font-size: 15px;
+  font-weight: 700;
+  border: 1px solid #9b4d4d;
+  cursor: pointer;
+  outline: none;
+  padding: 0px 6px;
+}
+
+.addParameter {
+  background-color: white;
+  color: #3e7c3e;
+  border-radius: 4px;
+  font-size: 15px;
+  font-weight: 700;
+  border: 1px solid #3e7c3e;
+  cursor: pointer;
+  outline: none;
+  padding: 0px 5px;
+}
+
+#loadConfig {
+  background: #3c59a0;
+}
+
+#loadConfig > input[type="file"] {
+  display: none;
+}
+
+#downloadConfig {
+  text-decoration: none;
+  background: #3e7c3e;
+}
+
+.topButtons {
+  margin: 5px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.cogwheel {
+  width: 15px;
+  height: 15px;
+  cursor: pointer;
+}
+.particleControls .alphaTable,
+.particleControls .rotationSpeedTable,
+.particleControls .scaleTable,
+.particleControls .accelerationXTable,
+.particleControls .accelerationYTable,
+.particleControls .speedTable {
+  width: 100%;
+  margin-top: 10px;
+}
+
+.canvasController {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 18px;
+}
+
+.angleWidth {
+  margin-top: 20px;
 }

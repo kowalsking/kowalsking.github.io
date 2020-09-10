@@ -1,10 +1,13 @@
 import { bigwinList } from "./config.js";
 import fields from "./fields.js";
+import Titles from "./titles.js";
 
 class Sidebar {
   constructor() {
     this.createBigwinList();
     this.eventsHandler();
+
+    new Titles();
   }
 
   createBigwinList() {
@@ -33,11 +36,23 @@ class Sidebar {
       }
     });
 
-    fields.bigwinDuration.addEventListener("wheel", (e) => {
-      e.preventDefault();
-      const delta = -e.deltaY;
-      fields.bigwinDuration.value = +fields.bigwinDuration.value + delta;
+    fields.collapseButton.addEventListener("click", (e) => {
+      document.querySelectorAll("details").forEach((detail) => {
+        detail.removeAttribute("open");
+      });
     });
+
+    fields.expandButton.addEventListener("click", (e) => {
+      document.querySelectorAll("details").forEach((detail) => {
+        detail.setAttribute("open", "open");
+      });
+    });
+
+    // fields.bigwinDuration.addEventListener("wheel", (e) => {
+    //   e.preventDefault();
+    //   const delta = -e.deltaY;
+    //   fields.bigwinDuration.value = +fields.bigwinDuration.value + delta;
+    // });
 
     fields.particleControls.addEventListener("click", (e) => {
       if (e.target.classList.contains("addParameter")) {
@@ -48,97 +63,155 @@ class Sidebar {
         const parameter = e.target.classList[1];
         this.handleData(parameter);
       }
+      if (e.target.classList.contains("cancel")) {
+        const parameter = e.target.classList[1];
+        fields[`${parameter}Popup`].style.display = "none";
+      }
       if (e.target.classList.contains("deleteParameter")) {
         this.removeNode(e.target.parentNode.parentNode);
       }
+      if (e.target.classList.contains("cogwheel")) {
+        e.preventDefault();
+        const parent = e.target.closest("details");
+        this.cogwheelHandler(parent);
+      }
+      if (e.target.classList.contains("particleForever")) {
+        fields.emitterLifetime.value = fields.particleForever.checked
+          ? -1
+          : 0.5;
+      }
     });
 
-    this.minimumScaleMultiplier();
-    this.minimumSpeedMultiplier();
-    this.isStepped();
+    fields.particleControls.addEventListener("input", (e) => {
+      const sliderComplex = e.target.closest(".sliderComplex");
+      if (sliderComplex) {
+        this.handleSliderComplex(sliderComplex);
+      }
+    });
+
+    fields.spawnType.addEventListener("change", (e) => {
+      this.handleSpawnType();
+    });
+
+    this.handlerActuationEmitter();
   }
 
   handleData(parameter) {
     this.clearWarning();
-    const options = this.defineOptions(parameter);
+    const options = Sidebar.defineOptions(parameter);
     if (!this.validOptions(options)) return;
-    const tr = this.createTableRow(options);
-    this.sortWithNewElement(tr, options);
+    const tr = Sidebar.createTableRow(options);
+    Sidebar.sortWithNewElement(tr, options);
     this.hidePopup(parameter);
-    this.additionalOptions(options);
   }
 
-  defineOptions(parameter) {
-    const time = fields[`${parameter}Popup`].querySelectorAll("input")[0];
-    const value = fields[`${parameter}Popup`].querySelectorAll("input")[1];
+  static defineOptions(parameter) {
+    const time = fields[`${parameter}Popup`].querySelector(".time").value;
+    const valueInput = fields[`${parameter}Popup`].querySelector(".value");
     const tbody = fields[`${parameter}Table`].querySelector("tbody");
     const children = Array.from(tbody.querySelectorAll("tr"));
+    let minInput = fields[`${parameter}Popup`].querySelector(".minValue");
+    let maxInput = fields[`${parameter}Popup`].querySelector(".maxValue");
+    let value = valueInput ? valueInput.value : null;
+    let min = minInput ? minInput.value : null;
+    let max = maxInput ? maxInput.value : null;
     let type = "number";
-    let min = 0;
-    let max = 1;
     let step = 0.01;
-
-    if (parameter === "speed") {
-      max = null;
-      step = 100;
-    }
+    const button = true;
+    const disable = minInput?.classList.contains("disable");
 
     if (parameter === "color") {
-      max = null;
-      min = null;
-      step = null;
+      value = fields.colorValue.value;
       type = "color";
     }
 
     return {
-      name: parameter,
-      time: time.value,
-      value: value.value,
-      tbody: tbody,
-      children: children,
-      max: max,
-      min: min,
-      step: step,
-      type: type,
+      parameter,
+      time,
+      value,
+      tbody,
+      children,
+      max,
+      min,
+      step,
+      type,
+      disable,
+      button,
     };
   }
 
-  additionalOptions(options) {
-    const parameter = options.name;
-    if (parameter === "scale") {
-    }
-  }
-
-  input(value, options) {
+  static input(value, options) {
     const step = value === "time" ? 0.01 : options.step;
     const max = value === "time" ? 1 : options.max;
     const type = value === "time" ? "number" : options.type;
+    const className = options.parameter === "alpha" ? "alphaTime" : "";
     return `<input
         type="${type}"
         step="${step}"
         min="${options.min}"
         max="${max}"
         value="${options[value]}"
+        class="${className}"
       />`;
   }
 
-  createTableRow(options) {
+  static createTableRow(options) {
     const tr = document.createElement("tr");
     tr.innerHTML = `
     <tr class="">
       <td class="timeInput">
-        ${this.input("time", options)}
+        ${Sidebar.input("time", options)}
       </td>
       <td>
-        ${this.input("value", options)}
+        ${
+          options.parameter === "color"
+            ? Sidebar.input("value", options)
+            : Sidebar.sliderComplex(options)
+        }
       </td>
-      <td>${this.deleteButton()}</td>
+      <td>
+        ${
+          options.parameter === "alpha"
+            ? `+/-<input type="number" min="0" class="randomizer" value='0'>`
+            : ""
+        }
+        ${options.button ? Sidebar.deleteButton() : ""}
+      </td>
     </tr>
     `;
     return tr;
   }
 
-  sortWithNewElement(tr, options) {
+  static sliderComplex(options) {
+    return `
+    <div class="sliderComplex listValue">
+    <div class="sliderMinMax">
+      <input class="min ${
+        options.disable ? "disable" : ""
+      }" type="number" value="${options.min}" />
+      <input
+        class="slider"
+        type="range"
+        min="${options.min}"
+        max="${options.max}"
+        step="${options.step}"
+        value="${options.value}"
+      />
+      <input class="max ${
+        options.disable ? "disable" : ""
+      }" type="number" value="${options.max}" />
+      <div class="vl"></div>
+      <input
+        type="number"
+        class="sliderValue"
+        value="${options.value}"
+      />
+    </div>
+  </div>
+    `;
+  }
+
+  static sortWithNewElement(tr, options) {
     const firstTr = options.tbody.querySelector("tr");
     const tds = options.tbody.querySelectorAll(".timeInput");
     const trs = [];
@@ -150,7 +223,6 @@ class Sidebar {
       .sort((first, second) => {
         const a = +first.querySelector("td > input").value;
         const b = +second.querySelector("td > input").value;
-
         return b - a;
       })
       .forEach((tr) => {
@@ -158,31 +230,112 @@ class Sidebar {
       });
   }
 
-  minimumScaleMultiplier() {
-    const input = fields.minimumScaleMultiplier;
-    const span = fields.minimumScaleMultiplier.parentElement.querySelector(
-      "span"
-    );
+  handleSpawnType() {
+    const emissions = [
+      fields.emissionBurst,
+      fields.emissionCircle,
+      fields.emissionRectangle,
+      fields.emissionRing,
+    ];
+    emissions.forEach((i) => {
+      i.style.display = "none";
+    });
 
-    input.addEventListener("input", () => {
-      span.textContent = input.value;
+    const target = fields.spawnType.value;
+
+    switch (target) {
+      case "rect":
+        fields.emissionRectangle.style.display = "block";
+        break;
+      case "circle":
+        fields.emissionCircle.style.display = "block";
+        break;
+      case "ring":
+        fields.emissionRing.style.display = "block";
+        break;
+      case "burst":
+        fields.emissionBurst.style.display = "block";
+        break;
+    }
+  }
+
+  handleSliderComplex(sliderComplex) {
+    const sliderValue = sliderComplex.querySelector(".sliderValue");
+    const slider = sliderComplex.querySelector(".slider");
+    const min = sliderComplex.querySelector(".min");
+    const max = sliderComplex.querySelector(".max");
+
+    sliderValue.addEventListener("input", () => {
+      if (+sliderValue.value > +max.value) {
+        max.value = +sliderValue.value;
+        slider.max = +sliderValue.value;
+      }
+      slider.value = sliderValue.value;
+    });
+
+    min.addEventListener("input", () => {
+      slider.min = min.value;
+      slider.step = this.calculateSliderStep(+min.value, +max.value);
+    });
+
+    max.addEventListener("input", () => {
+      slider.max = max.value;
+      slider.step = this.calculateSliderStep(+min.value, +max.value);
+    });
+
+    slider.addEventListener("input", () => {
+      sliderValue.value = slider.value;
     });
   }
 
-  minimumSpeedMultiplier() {
-    const input = fields.minimumSpeedMultiplier;
-    const span = fields.minimumSpeedMultiplier.parentElement.querySelector(
-      "span"
-    );
+  calculateSliderStep(min, max) {
+    const steps = max - min > 20 ? 50 : 20;
+    return (max - min) / steps;
+  }
 
-    input.addEventListener("input", () => {
-      span.textContent = input.value;
+  handlerActuationEmitter() {
+    const variants = [
+      fields.onSpineEvent,
+      fields.onTimeInterval,
+      fields.onEndBigwin,
+      fields.particleForever,
+      fields.particleOnClick,
+    ];
+
+    fields.actuationEmitter.addEventListener("change", (e) => {
+      if (fields.actuationEmitter.checked) {
+        variants.forEach((v) => {
+          v.checked = true;
+        });
+      } else if (!fields.actuationEmitter.checked) {
+        variants.forEach((v) => {
+          v.checked = false;
+        });
+      }
+    });
+
+    variants.forEach((v) => {
+      v.addEventListener("change", () => {
+        fields.actuationEmitter.checked = false;
+        if (v.className === "onTimeInterval") {
+          if (v.checked) {
+            fields.onTimeIntervalValue.focus();
+          }
+        }
+      });
     });
   }
 
-  isStepped() {
-    fields.isStepped.addEventListener("click", () => {
-      fields.isStepped.toggleAttribute("checked");
+  cogwheelHandler(parent) {
+    const min = parent.querySelectorAll(".min");
+    const max = parent.querySelectorAll(".max");
+
+    min.forEach((m) => {
+      m.classList.toggle("disable");
+    });
+
+    max.forEach((m) => {
+      m.classList.toggle("disable");
     });
   }
 
@@ -200,7 +353,7 @@ class Sidebar {
     main.style.marginRight = "0";
   }
 
-  deleteButton() {
+  static deleteButton() {
     return `<button class="deleteParameter">-</button>`;
   }
 
@@ -225,4 +378,4 @@ class Sidebar {
   }
 }
 
-new Sidebar();
+export default Sidebar;
