@@ -48,12 +48,6 @@ class Sidebar {
       });
     });
 
-    // fields.bigwinDuration.addEventListener("wheel", (e) => {
-    //   e.preventDefault();
-    //   const delta = -e.deltaY;
-    //   fields.bigwinDuration.value = +fields.bigwinDuration.value + delta;
-    // });
-
     fields.particleControls.addEventListener("click", (e) => {
       if (e.target.classList.contains("addParameter")) {
         const parameter = e.target.classList[1];
