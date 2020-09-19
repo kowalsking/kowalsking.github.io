@@ -1,73 +1,22 @@
 <!DOCTYPE html>
 <html lang="en" class="projects__html">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="../css/main.css">
-    <script src="https://kit.fontawesome.com/76aedc0a07.js" crossorigin="anonymous"></script>
+  <head>
+    <link rel="stylesheet" href="./style.css" />
+    <script
+      src="https://kit.fontawesome.com/76aedc0a07.js"
+      crossorigin="anonymous"
+    ></script>
     <title>My awesome projects c:</title>
-</head>
-<body class="projects__body">
-    <h1 class="projects__h1">Click and hold anywhere, then move the cursor</h1>
-
-    <div class="wheel">
-        <div class="arc" name="dura"><i class="fas fa-home"></i><a href="google.com" class="default"></a></div>
-        <div class="arc"><i class="fas fa-question"></i></div>
-        <div class="arc"><i class="fas fa-bell"></i></div>
-        <div class="arc"><i class="fas fa-camera"></i></div>
-        <div class="arc"><i class="fas fa-trash-alt"></i></div>
-        <div class="arc"><i class="fas fa-save"></i></div>
-        <div class="arc"><i class="fas fa-flag"></i></div>
-        <div class="arc"><i class="fab fa-codepen"></i></div>
-    </div>
-
-    <script>
-        document.body.addEventListener('contextmenu', e => e.preventDefault() & e.stopPropagation());
-        document.body.addEventListener('mousedown', onMouseDown);
-        document.body.addEventListener('touchstart', e => onMouseDown(e.touches[0]));
-        document.body.addEventListener('mouseup', onMouseUp);
-        document.body.addEventListener('touchend', e => onMouseUp(e.touches[0]));
-        document.body.addEventListener('mousemove', onMouseMove);
-        document.body.addEventListener('touchmove', e => onMouseMove(e.touches[0]));
-
-        let showing, anchorX, anchorY, min = 100;
-        const wheel = document.querySelector('.wheel');
-
-        function onMouseDown({ clientX: x, clientY: y }) {
-            showing = true;
-            anchorX = x;
-            anchorY = y;
-
-            wheel.style.setProperty('--x', `${x}px`);
-            wheel.style.setProperty('--y', `${y}px`);
-            wheel.classList.add('on');
-        }
-
-        function onMouseUp() {
-            showing = false;
-            wheel.setAttribute('data-chosen', 0);
-            wheel.classList.remove('on');
-            console.log(this.name);
-        }
-
-        function onMouseMove({ clientX: x, clientY: y }) {
-            if (!showing) return;
-
-            let dx = x - anchorX;
-            let dy = y - anchorY;
-            let mag = Math.sqrt(dx * dx + dy * dy);
-            let index = 0;
-
-            if (mag >= min) {
-                let deg = Math.atan2(dy, dx) + 0.625 * Math.PI;
-                while (deg < 0) deg += Math.PI * 2;
-                index = Math.floor(deg / Math.PI * 4) + 1;
-            }
-
-            wheel.setAttribute('data-chosen', index);
-        }
-    </script>
-
-</body>
+  </head>
+  <body class="projects__body">
+    <h1>My awesome projects!</h1>
+    <ul>
+      <li><a href="./asteroids/public/index.html">Asteroids</a></li>
+      <li><a href="./particle/index.html">Particle Editor</a></li>
+      <li><a href="./todo-list/index.html">To Do List</a></li>
+      <li><a href="./generative-art/index.html">Generative Art</a></li>
+      <li><a href="./slot-machine/index.html">Stot Machine</a></li>
+      <li><a href="./drumKit/index.html">Drum Kit</a></li>
+    </ul>
+  </body>
 </html>
