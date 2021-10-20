@@ -8,7 +8,7 @@ module.exports = {
   plugins: [
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
-      title: 'Kowalsking',
+      title: 'Kowalsking | JavaScript Developer',
       template: './app/index.html'
     }),
   ],

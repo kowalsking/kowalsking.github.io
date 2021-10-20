@@ -86,27 +86,14 @@
 /************************************************************************/
 /******/ ({
 
-/***/ "./app/js/greet.js":
-/*!*************************!*\
-  !*** ./app/js/greet.js ***!
-  \*************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-eval("\nObject.defineProperty(exports, \"__esModule\", { value: true });\nfunction sayHello(name) {\n    return \"Hello from \" + name;\n}\nexports.sayHello = sayHello;\n\n\n//# sourceURL=webpack:///./app/js/greet.js?");
-
-/***/ }),
-
 /***/ "./app/js/main.js":
 /*!************************!*\
   !*** ./app/js/main.js ***!
   \************************/
 /*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, exports) {
 
-"use strict";
-eval("\nObject.defineProperty(exports, \"__esModule\", { value: true });\nvar greet_1 = __webpack_require__(/*! ./greet */ \"./app/js/greet.js\");\nconsole.log(greet_1.sayHello('TypeScript'));\nvar consoleStyle = [\n    'background: linear-gradient(to right, #5433ff, #20bdff, #a5fecb);',\n    'color: #fff',\n    'padding: 10px 20px',\n    'line-height: 35px'\n].join(';');\nconsole.log('%cHi there!', consoleStyle);\nfunction hello(compiler) {\n    console.log(\"Hello from \" + compiler);\n}\n// hello('TypeScript');\n// function logotype() {\n//     let logo = document.querySelector('.logo');\n//     logo.addEventListener('click', (e) => {\n//         e.preventDefault();\n//         console.log(this);\n//         logo.classList.toggle('coolLogo')\n//     });\n// }\n//\n// logotype();\n\n\n//# sourceURL=webpack:///./app/js/main.js?");
+eval("console.log(\"123\");\r\n\n\n//# sourceURL=webpack:///./app/js/main.js?");
 
 /***/ })
 
