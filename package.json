@@ -21,6 +21,6 @@
     "eases": "^1.0.8",
     "glslify": "^7.1.1",
     "nice-color-palettes": "^3.0.0",
-    "three": "^0.120.1"
+    "three": "^0.137.0"
   }
 }
